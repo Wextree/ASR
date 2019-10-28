@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Filename_Get</title>
+</head>
+<body>
+		<form method="post" action="{% url 'check' %}">
+			{%csrf_token%}
+		    <!-- <input id="color" type="text" name="color" placeholder="your color(1,0,1,0,1.....)"> -->
+		    <input id="label" type="text" name="path" placeholder="wav path"><br>
+			
+			<input id="submit" type="submit" value="OK"><br>
+		</form>
+
+</body>
+</html>
