@@ -5,10 +5,10 @@
     <title>Filename_Get</title>
 </head>
 <body>
-		<form method="post" action="{% url 'check' %}">
+		<form method="post" action="{% url 'load' %}" enctype="multipart/form-data">
 			{%csrf_token%}
-		    <!-- <input id="color" type="text" name="color" placeholder="your color(1,0,1,0,1.....)"> -->
-		    <input id="label" type="text" name="path" placeholder="wav path"><br>
+<!--		    <input id="label" type="text" name="path" placeholder="wav path"><br>-->
+			<input type="file" name="file" accept=".wav"/><br />
 			
 			<input id="submit" type="submit" value="OK"><br>
 		</form>

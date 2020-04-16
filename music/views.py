@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from keras.models import load_model
+from music.models import Music
 import numpy as np
 import librosa
 import sklearn
@@ -14,18 +15,29 @@ def index(request):
     return render(request, 'login.html')
 
 
-# get the wav path and create label and probability of it
+# # get the wav path and create label and probability of it
 def create_label(request):
     # get the address of the wav audio
     if request.method == 'POST':
-        wav_path = request.POST.get('path')
-    print(wav_path)
+        # wav_path = request.POST.get('path')
+        file = request.FILES['file']
+    # print(wav_path)
+
+    wavName = "./music/wav/" + file.name
+    print(wavName)
+    with open(wavName, 'wb') as wav:
+        for c in file.chunks():
+            wav.write(c)
+
+
+    music = Music()
+    music.wav_path = wavName
 
     # load the web of ASR
     gen = load_model('music\MusicClass\music_cla_model.h5')
 
     # check the length of the audio and cut into a proper length
-    x, sr = librosa.load(wav_path)
+    x, sr = librosa.load(wavName)
     if len(x) < 88200:
         x = np.pad(x, (0, 88200 - x.shape[0]), 'constant')
     else:
@@ -43,6 +55,24 @@ def create_label(request):
     for num in result:
         probability.append(float(num))
     print(probability, sum(probability), max(probability))
+    music.probability = max(probability)
+    music.label = probability.index(max(probability))
+    print("label：" + str(music.label))
+    music.save()
 
 
     return HttpResponse("succeed!!!")
+
+# def create_label(request):
+#     # get the address of the wav audio
+#     if request.method == 'POST':
+#         # wav_path = request.POST.get('path')
+#         file = request.FILES['file']
+#     print(type(file))
+#     print(file.name)
+#     wavName = "./music/wav/" + file.name
+#     print(wavName)
+#     with open(wavName, 'wb') as wav:
+#         for c in file.chunks():
+#             wav.write(c)
+#     return HttpResponse("succeed!!!")
